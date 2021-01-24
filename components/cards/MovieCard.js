@@ -3,13 +3,13 @@ import { TiArrowRight } from 'react-icons/ti';
 import styles from './Card.module.scss';
 import Image from 'next/image';
 
-const MovieCard = () => {
-  // const ChakraImage = chakra(Image);
+const MovieCard = ({ poster }) => {
+  const imgBaseUrl = 'https://image.tmdb.org/t/p/w500/';
   return (
     <Box pos="relative">
       <Image
-        src="/images/movie-img.webp"
-        width={300}
+        src={`${imgBaseUrl}${poster}`}
+        width={250}
         height={350}
         alt="movie"
         objectFit="cover"

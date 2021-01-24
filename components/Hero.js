@@ -1,6 +1,35 @@
-import { Box, Text, Container, Flex, Button, Link, HStack } from '@chakra-ui/react';
+import {
+  Box,
+  Text,
+  Container,
+  Flex,
+  Button,
+  Link,
+  HStack,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  FormHelperText,
+  Input,
+  useDisclosure,
+  VStack
+} from '@chakra-ui/react';
+import { UserContext } from '../context/UserContext';
+import RegisterForm from './forms/RegisterForm';
+import Modal from './Modal';
+import { useContext, useEffect, useState } from 'react';
+import supabase from '../lib/supabaseClient';
+import LoginForm from './forms/LoginForm';
 
 const Hero = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [modalState, setModalState] = useState(1);
+
+  const openModal = (modal) => {
+    setModalState(modal);
+    onOpen();
+  };
+
   return (
     <Flex
       w="100vw"
@@ -28,14 +57,28 @@ const Hero = () => {
             Set my preferences
           </Button>
         </Box>
-        <HStack spacing="1.5rem" pos="absolute" right="0" top="20px">
-          <Link href="#" textDecor="underline" color="white" fontWeight="bold" fontSize="20px">
-            Register
-          </Link>
-          <Link href="#" textDecor="underline" color="white" fontWeight="bold" fontSize="20px">
-            Login
-          </Link>
-        </HStack>
+        {!supabase.auth.session() && (
+          <HStack spacing="1.5rem" pos="absolute" right="0" top="20px">
+            <Link
+              href="#"
+              onClick={() => openModal(1)}
+              textDecor="underline"
+              color="white"
+              fontWeight="bold"
+              fontSize="20px">
+              Register
+            </Link>
+            <Link
+              href="#"
+              onClick={() => openModal(2)}
+              textDecor="underline"
+              color="white"
+              fontWeight="bold"
+              fontSize="20px">
+              Login
+            </Link>
+          </HStack>
+        )}
       </Container>
       <Box
         w="100%"
@@ -45,6 +88,9 @@ const Hero = () => {
         h="100%"
         bgGradient="linear(to-r, rgba(0,0,0,0.5), rgba(0,0,0,0))"
       />
+      <Modal isOpen={isOpen} onClose={onClose} title={modalState == 1 ? 'Register' : 'Login'}>
+        {modalState == 1 ? <RegisterForm /> : <LoginForm />}
+      </Modal>
     </Flex>
   );
 };
