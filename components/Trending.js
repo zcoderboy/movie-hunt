@@ -1,7 +1,20 @@
-import { Button, Heading, HStack, Input, Select, Box, VStack, SimpleGrid } from '@chakra-ui/react';
+import {
+  Button,
+  Heading,
+  HStack,
+  Input,
+  Select,
+  Text,
+  Box,
+  VStack,
+  SimpleGrid,
+  Flex
+} from '@chakra-ui/react';
 import supabase from '../lib/supabaseClient';
 import MovieCard from './cards/MovieCard';
 import { useState, useCallback, useEffect } from 'react';
+import { TiArrowRight } from 'react-icons/ti';
+import Link from 'next/link';
 
 const Trending = () => {
   const [trending, setTrending] = useState([]);
@@ -84,9 +97,29 @@ const Trending = () => {
         </HStack>
         <SimpleGrid columns={4} spacingX="40px" mt="4">
           {trending.map((media) => {
-            return <MovieCard poster={media.data.poster_path} />;
+            return (
+              <MovieCard
+                poster={media.data.poster_path}
+                title={media.data.title ? media.data.title : media.data.name}
+                description={media.data.overview}
+                releaseDate={
+                  media.data.release_date ? media.data.release_date : media.data.first_air_date
+                }
+                extra={media}
+              />
+            );
           })}
         </SimpleGrid>
+        <Flex justify="flex-end" mt="4">
+          <Link href="/trending">
+            <Box d="flex" alignItems="center">
+              <Text cursor="pointer" color="primary.500" fontSize="md1">
+                Discover all trending shows
+              </Text>
+              <Box color="primary.500" as={TiArrowRight} boxSize="30px" />
+            </Box>
+          </Link>
+        </Flex>
       </Box>
     </VStack>
   );

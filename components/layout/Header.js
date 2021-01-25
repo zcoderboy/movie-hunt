@@ -10,6 +10,7 @@ import { useContext } from 'react';
 import Modal from '../Modal';
 import MultiSelectSort from '../forms/MultiSelect';
 import PreferencesFrom from '../forms/PreferencesForm';
+import Link from 'next/link';
 
 const Header = () => {
   const { logoutUser } = useContext(UserContext);
@@ -36,9 +37,11 @@ const Header = () => {
             <Button leftIcon={<FaCog />} colorScheme="primary" variant="outline" onClick={onOpen}>
               Update my preferences
             </Button>
-            <Button leftIcon={<MdMovie />} colorScheme="primary" variant="outline">
-              Discover shows
-            </Button>
+            <Link href="/account/discover">
+              <Button leftIcon={<MdMovie />} colorScheme="primary" variant="outline">
+                Discover shows
+              </Button>
+            </Link>
             <Box as={FiPower} boxSize="25px" onClick={handleLogout} cursor="pointer" />
           </HStack>
         </Flex>
