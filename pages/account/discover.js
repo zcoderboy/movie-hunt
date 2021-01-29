@@ -1,17 +1,30 @@
-import { Box, Container, SimpleGrid, Text, Badge, HStack, Skeleton } from '@chakra-ui/react';
+import {
+  Box,
+  Container,
+  SimpleGrid,
+  Text,
+  Badge,
+  HStack,
+  Skeleton,
+  Flex,
+  VStack
+} from '@chakra-ui/react';
 import withAuth from '../../components/withAuth';
 import supabase from '../../lib/supabaseClient';
 import { useEffect, useCallback, useState } from 'react';
+import { FaRegSadCry } from 'react-icons/fa';
 import MovieCard from '../../components/cards/MovieCard';
 
 const Discover = () => {
   const user = supabase.auth.user();
   const [medias, setMedias] = useState([]);
   const [preferences, setPreferences] = useState({ genres: [] });
+  const [isEmpty, setIsEmpty] = useState(false);
+
   const getPreferences = useCallback(async () => {
     try {
       const { data } = await supabase.from('preferences').select('*').eq('user_id', user.id);
-      return JSON.parse(data[0].value);
+      return data ? JSON.parse(data[0].value) : data;
     } catch (error) {
       alert(error);
     }
@@ -26,12 +39,39 @@ const Discover = () => {
     }
   }, []);
 
+  const isBetween = (value, min, max) => {
+    if (value >= min && value <= max) {
+      return true;
+    }
+    return false;
+  };
+
   const checkPreference = (media, preferences) => {
     let match = false;
-    media.genres.forEach((genre, index) => {
+    const { rateMin, yearMin } = preferences;
+    media.data.genres.forEach((genre, index) => {
       preferences.genres.forEach((item) => {
-        if (genre.id == item.id) {
-          match = true;
+        if (genre.id == item.id && media.provider === preferences.network) {
+          if (rateMin && yearMin) {
+            if (
+              isBetween(media.data.vote_average, rateMin, 10) &&
+              isBetween(media.data.release_date.split('-')[0], yearMin, 2021)
+            ) {
+              match = true;
+            }
+          } else if (rateMin && yearMin === '') {
+            if (
+              isBetween(media.data.vote_average, rateMin, 10) &&
+              isBetween(media.data.release_date.split('-')[0], 2000, 2021)
+            )
+              match = true;
+          } else if (rateMin === '' && yearMin) {
+            if (
+              isBetween(media.data.release_date.split('-')[0], yearMin, 2021) &&
+              isBetween(media.data.vote_average, 1, 10)
+            )
+              match = true;
+          }
         }
       });
     });
@@ -41,14 +81,21 @@ const Discover = () => {
 
   useEffect(() => {
     getPreferences().then((preferences) => {
-      setPreferences(preferences);
-      getMedias().then((medias) => {
-        let matches = medias.filter((media) => checkPreference(media.data, preferences));
-        setMedias(matches);
-      });
+      if (preferences) {
+        setPreferences(preferences);
+        getMedias().then((medias) => {
+          let matches = medias.filter((media) => checkPreference(media, preferences));
+          if (matches.length === 0) {
+            setIsEmpty(true);
+          } else {
+            setMedias(matches);
+          }
+        });
+      }
     });
     return () => {};
   }, []);
+
   return (
     <Container maxW="90vw" mt="8">
       <Text fontSize="md2" fontWeight="bold">
@@ -77,10 +124,21 @@ const Discover = () => {
             );
           })}
         {medias.length === 0 &&
+          !isEmpty &&
           [...new Array(4)].map(() => {
             return <Skeleton h="350px" borderRadius="4px"></Skeleton>;
           })}
       </SimpleGrid>
+      {isEmpty && (
+        <VStack justifyContent="center">
+          <Box as={FaRegSadCry} boxSize="70px" />
+          <Text textAlign="center" fontSize="md1">
+            Ooops, we couldn't find any matching shows.
+            <br />
+            Try adjusting your preferences.
+          </Text>
+        </VStack>
+      )}
     </Container>
   );
 };

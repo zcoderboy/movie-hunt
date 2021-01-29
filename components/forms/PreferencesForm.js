@@ -13,6 +13,7 @@ import {
   Button,
   Box
 } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 import { FaRegCalendarAlt } from 'react-icons/fa';
 import { AiFillStar } from 'react-icons/ai';
 import { useState, useEffect, useCallback } from 'react';
@@ -24,6 +25,9 @@ const PreferencesFrom = () => {
   const [genres, setGenres] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [success, setSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const user = supabase.auth.user();
 
   const transformToOption = (data) => {
     data.forEach((item) => {
@@ -47,17 +51,13 @@ const PreferencesFrom = () => {
   const savePreferences = async (values) => {
     return new Promise(async (resolve, reject) => {
       try {
-        let userId = supabase.auth.user().id;
-        await supabase.from('preferences').delete().eq('user_id', userId);
-        const { data } = await supabase.from('preferences').insert(
-          [
-            {
-              user_id: userId,
-              value: JSON.stringify(values)
-            }
-          ],
-          { upsert: true }
-        );
+        await supabase.from('preferences').delete().eq('user_id', user.id);
+        const { data } = await supabase.from('preferences').insert([
+          {
+            user_id: user.id,
+            value: JSON.stringify(values)
+          }
+        ]);
         resolve(data);
       } catch (error) {
         reject(error);
@@ -65,25 +65,46 @@ const PreferencesFrom = () => {
     });
   };
 
+  const getPreferences = useCallback(async () => {
+    try {
+      const { data } = await supabase.from('preferences').select('*').eq('user_id', user.id);
+      return data ? JSON.parse(data[0].value) : data;
+    } catch (error) {
+      alert(error);
+    }
+  }, []);
+
   const formik = useFormik({
     initialValues: {
       genres: [],
-      network: '',
-      yearMin: '',
-      yearMax: '',
-      rateMin: '',
-      rateMax: ''
+      network: 'NETFLIX',
+      yearMin: '2000',
+      rateMin: '1'
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       formik.values.genres = selectedGenres;
+      setIsLoading(true);
       savePreferences(values).then((data) => {
         setSuccess(true);
+        setIsLoading(false);
+        if (router.pathname === '/account/discover') {
+          window.location.reload();
+        }
       });
     }
   });
+
   useEffect(() => {
     getGenres();
+    getPreferences().then((data) => {
+      if (data) {
+        formik.values.network = data.network;
+        formik.values.yearMin = data.yearMin ? data.yearMin : formik.values.yearMin;
+        formik.values.rateMin = data.rateMin ? data.rateMin : formik.values.rateMin;
+        setSelectedGenres(data.genres);
+      }
+    });
   }, []);
 
   return (
@@ -114,8 +135,8 @@ const PreferencesFrom = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.network}>
-              <option selected>Netflix</option>
-              <option>Amazon Prime Video</option>
+              <option value="NETFLIX">Netflix</option>
+              <option value="AMAZON PRIME VIDEO">Amazon Prime Video</option>
             </Select>
             {formik.touched.network && formik.errors.network ? (
               <Text as="span" color="#DE0913" mt="2" d="block" fontSize="14px">
@@ -124,118 +145,62 @@ const PreferencesFrom = () => {
             ) : null}
           </FormControl>
           <FormControl>
-            <FormLabel>Year - Between</FormLabel>
-            <HStack align="top">
-              <VStack flex="1" align="start">
-                <InputGroup>
-                  <InputLeftElement
-                    pointerEvents="none"
-                    pos="absolute"
-                    zIndex="-1"
-                    children={<FaRegCalendarAlt color="#ddd" />}
-                  />
-                  <Input
-                    focusBorderColor="#F97B2F"
-                    type="number"
-                    placeholder="2010"
-                    name="yearMin"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.yearMin}
-                  />
-                </InputGroup>
-                {formik.touched.yearMin && formik.errors.yearMin ? (
-                  <Text as="span" color="#DE0913" mt="2" d="block" fontSize="14px">
-                    {formik.errors.yearMin}
-                  </Text>
-                ) : null}
-              </VStack>
-              <Text as="span">and</Text>
-              <VStack flex="1" align="start">
-                <InputGroup>
-                  <InputLeftElement
-                    pointerEvents="none"
-                    pos="absolute"
-                    zIndex="-1"
-                    children={<FaRegCalendarAlt color="#ddd" />}
-                  />
-                  <Input
-                    focusBorderColor="#F97B2F"
-                    type="number"
-                    placeholder="2021"
-                    name="yearMax"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.yearMax}
-                  />
-                </InputGroup>
-                {formik.touched.yearMax && formik.errors.yearMax ? (
-                  <Text as="span" color="#DE0913" mt="2" d="block" fontSize="14px">
-                    {formik.errors.yearMax}
-                  </Text>
-                ) : null}
-              </VStack>
-            </HStack>
+            <FormLabel>Year Min.</FormLabel>
+            <InputGroup>
+              <InputLeftElement
+                pointerEvents="none"
+                pos="absolute"
+                zIndex="-1"
+                children={<FaRegCalendarAlt color="#ddd" />}
+              />
+              <Input
+                focusBorderColor="#F97B2F"
+                type="number"
+                placeholder="2010"
+                name="yearMin"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.yearMin}
+              />
+            </InputGroup>
+            {formik.touched.yearMin && formik.errors.yearMin ? (
+              <Text as="span" color="#DE0913" mt="2" d="block" fontSize="14px">
+                {formik.errors.yearMin}
+              </Text>
+            ) : null}
           </FormControl>
           <FormControl>
-            <FormLabel>Rate - Between</FormLabel>
-            <HStack align="top">
-              <VStack flex="1" align="start">
-                <InputGroup d="flex" flexDir="column">
-                  <InputLeftElement
-                    pointerEvents="none"
-                    pos="absolute"
-                    zIndex="-1"
-                    children={<AiFillStar color="#ddd" />}
-                  />
-                  <Input
-                    focusBorderColor="#F97B2F"
-                    type="number"
-                    placeholder="3"
-                    min="1"
-                    max="10"
-                    name="rateMin"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.rateMin}
-                  />
-                </InputGroup>
-                {formik.touched.rateMin && formik.errors.rateMin ? (
-                  <Text as="span" color="#DE0913" mt="2" d="block" fontSize="14px">
-                    {formik.errors.rateMin}
-                  </Text>
-                ) : null}
-              </VStack>
-              <Text as="span">and</Text>
-              <VStack flex="1" align="start">
-                <InputGroup d="flex" flexDir="column">
-                  <InputLeftElement
-                    pointerEvents="none"
-                    pos="absolute"
-                    zIndex="-1"
-                    children={<AiFillStar color="#ddd" />}
-                  />
-                  <Input
-                    focusBorderColor="#F97B2F"
-                    type="number"
-                    placeholder="5"
-                    max="10"
-                    min="1"
-                    name="rateMax"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.rateMax}
-                  />
-                </InputGroup>
-                {formik.touched.rateMax && formik.errors.rateMax ? (
-                  <Text as="span" color="#DE0913" mt="2" d="block" fontSize="14px">
-                    {formik.errors.rateMax}
-                  </Text>
-                ) : null}
-              </VStack>
-            </HStack>
+            <FormLabel>Rate Min.</FormLabel>
+            <InputGroup d="flex" flexDir="column">
+              <InputLeftElement
+                pointerEvents="none"
+                pos="absolute"
+                zIndex="-1"
+                children={<AiFillStar color="#ddd" />}
+              />
+              <Input
+                focusBorderColor="#F97B2F"
+                type="number"
+                placeholder="3"
+                min="1"
+                max="10"
+                name="rateMin"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.rateMin}
+              />
+            </InputGroup>
+            {formik.touched.rateMin && formik.errors.rateMin ? (
+              <Text as="span" color="#DE0913" mt="2" d="block" fontSize="14px">
+                {formik.errors.rateMin}
+              </Text>
+            ) : null}
           </FormControl>
-          <Button type="submit" colorScheme="green">
+          <Button
+            isLoading={isLoading}
+            type="submit"
+            colorScheme="green"
+            loadingText="Submitting...">
             Save
           </Button>
         </VStack>
