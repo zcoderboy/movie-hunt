@@ -1,9 +1,20 @@
-import { Button, Container, Box, Text, VStack } from '@chakra-ui/react';
+import {
+  Button,
+  Container,
+  Box,
+  Text,
+  VStack,
+  Input,
+  Select,
+  Heading,
+  HStack
+} from '@chakra-ui/react';
 import Head from 'next/head';
 import Hero from '../components/Hero';
 import supabase from '../lib/supabaseClient';
 import Footer from '../components/layout/Footer';
 import Trending from '../components/Trending';
+import SearchForm from '../components/forms/SearchForm';
 
 export default function Home() {
   return (
@@ -16,6 +27,7 @@ export default function Home() {
         <VStack spacing="3rem" align="left">
           <Hero />
           <Container maxW="90vw" marginInlineStart="auto !important">
+            <SearchForm />
             <Trending />
           </Container>
           {!supabase.auth.session() && (

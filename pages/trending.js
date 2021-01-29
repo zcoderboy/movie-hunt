@@ -1,7 +1,18 @@
-import { Container, Text, SimpleGrid, Skeleton, HStack, Button, Box } from '@chakra-ui/react';
+import {
+  Container,
+  Text,
+  SimpleGrid,
+  Skeleton,
+  HStack,
+  Button,
+  Box,
+  IconButton
+} from '@chakra-ui/react';
 import { useEffect, useCallback, useState } from 'react';
 import supabase from '../lib/supabaseClient';
 import MovieCard from '../components/cards/MovieCard';
+import Link from 'next/link';
+import { AiFillHome } from 'react-icons/ai';
 
 const TrendingMovies = () => {
   const [trends, setTrends] = useState([]);
@@ -30,6 +41,15 @@ const TrendingMovies = () => {
   }, []);
   return (
     <Container maxW="90vw" mt="8">
+      <Link href="/">
+        <IconButton
+          colorScheme="primary"
+          mb="4"
+          fontSize="20px"
+          aria-label="Back to homepage"
+          icon={<AiFillHome />}
+        />
+      </Link>
       <HStack align="left" spacing="2rem">
         <Text fontSize="md2" fontWeight="bold">
           Trending shows 🔥

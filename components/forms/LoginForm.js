@@ -11,7 +11,7 @@ const LoginForm = () => {
     e.preventDefault();
     loginUser({ email: email, password: password })
       .then(() => {
-        window.location.reload();
+        window.location.href = '/';
       })
       .catch((error) => {
         alert('An error occurred. Try again later');

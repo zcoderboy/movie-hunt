@@ -77,7 +77,7 @@ const PreferencesFrom = () => {
   const formik = useFormik({
     initialValues: {
       genres: [],
-      network: 'NETFLIX',
+      network: 'ANY',
       yearMin: '2000',
       rateMin: '1'
     },
@@ -137,6 +137,7 @@ const PreferencesFrom = () => {
               value={formik.values.network}>
               <option value="NETFLIX">Netflix</option>
               <option value="AMAZON PRIME VIDEO">Amazon Prime Video</option>
+              <option value="ANY">Any</option>
             </Select>
             {formik.touched.network && formik.errors.network ? (
               <Text as="span" color="#DE0913" mt="2" d="block" fontSize="14px">

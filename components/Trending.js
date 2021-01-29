@@ -8,7 +8,8 @@ import {
   Box,
   VStack,
   SimpleGrid,
-  Flex
+  Flex,
+  Skeleton
 } from '@chakra-ui/react';
 import supabase from '../lib/supabaseClient';
 import MovieCard from './cards/MovieCard';
@@ -18,6 +19,7 @@ import Link from 'next/link';
 
 const Trending = () => {
   const [trending, setTrending] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const getTrending = useCallback(async () => {
     let { data: trending, error } = await supabase.from('trending').select('*').range(0, 3);
@@ -25,6 +27,7 @@ const Trending = () => {
   }, []);
 
   async function loadTrendingByNetwork(network) {
+    setIsLoading(true);
     network = network == 1 ? 'NETFLIX' : 'AMAZON PRIME VIDEO';
     let { data: trending, error } = await supabase
       .from('trending')
@@ -33,32 +36,17 @@ const Trending = () => {
       .range(0, 3);
 
     setTrending(trending);
+    setIsLoading(false);
   }
 
   useEffect(() => {
-    getTrending();
+    getTrending().then(() => {
+      setIsLoading(false);
+    });
     return () => {};
   }, []);
   return (
     <VStack spacing="3rem" align="left">
-      <Box>
-        <Heading fontSize="lg" as="h1">
-          What are you looking for ?
-        </Heading>
-        <HStack mt="4">
-          <Select placeholder="" focusBorderColor="#F97B2F" placeholder="" h="3rem">
-            <option>Adventure</option>
-          </Select>
-          <Input focusBorderColor="#F97B2F" placeholder="Year" h="3rem" />
-          <Select focusBorderColor="#F97B2F" placeholder="" h="3rem">
-            <option selected>Netflix</option>
-            <option>Amazon Prime Video</option>
-          </Select>
-          <Button colorScheme="primary" p="1rem 4rem" h="3rem">
-            Find
-          </Button>
-        </HStack>
-      </Box>
       <Box>
         <HStack align="left">
           <Heading fontSize="lg" as="h1">
@@ -96,19 +84,24 @@ const Trending = () => {
           </Button>
         </HStack>
         <SimpleGrid columns={4} spacingX="40px" mt="4">
-          {trending.map((media) => {
-            return (
-              <MovieCard
-                poster={media.data.poster_path}
-                title={media.data.title ? media.data.title : media.data.name}
-                description={media.data.overview}
-                releaseDate={
-                  media.data.release_date ? media.data.release_date : media.data.first_air_date
-                }
-                extra={media}
-              />
-            );
-          })}
+          {!isLoading &&
+            trending.map((media) => {
+              return (
+                <MovieCard
+                  poster={media.data.poster_path}
+                  title={media.data.title ? media.data.title : media.data.name}
+                  description={media.data.overview}
+                  releaseDate={
+                    media.data.release_date ? media.data.release_date : media.data.first_air_date
+                  }
+                  extra={media}
+                />
+              );
+            })}
+          {isLoading &&
+            [...new Array(4)].map(() => {
+              return <Skeleton h="350px" borderRadius="4px"></Skeleton>;
+            })}
         </SimpleGrid>
         <Flex justify="flex-end" mt="4">
           <Link href="/trending">
