@@ -1,4 +1,26 @@
-import { Box, Button, Container, Flex, HStack, Text, useDisclosure } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  HStack,
+  Text,
+  useDisclosure,
+  useBreakpointValue as bp,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  IconButton,
+  chakra,
+  Link as CLink,
+  MenuItemOption,
+  MenuGroup,
+  MenuOptionGroup,
+  MenuIcon,
+  MenuCommand,
+  MenuDivider
+} from '@chakra-ui/react';
 import { FaCog } from 'react-icons/fa';
 import { MdMovie } from 'react-icons/md';
 import { HiUser } from 'react-icons/hi';
@@ -14,6 +36,9 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import LoginForm from '../forms/LoginForm';
 import RegisterForm from '../forms/RegisterForm';
+import { HiMenuAlt3 } from 'react-icons/hi';
+
+const CMenu = chakra(Menu);
 
 const Header = () => {
   const { logoutUser } = useContext(UserContext);
@@ -21,6 +46,7 @@ const Header = () => {
   const [currentModal, setCurrentModal] = useState({});
   const router = useRouter();
   const user = supabase.auth.user();
+  const menuDisplay = bp({ base: 'none', lg: 'flex' });
   const handleLogout = () => {
     logoutUser()
       .then(() => {
@@ -33,13 +59,15 @@ const Header = () => {
   return (
     <Flex boxShadow="0 .5rem 1rem rgba(0,0,0,.15)" alignItems="center">
       {supabase.auth.session() && (
-        <Container maxW="90vw" py="5">
+        <Container maxW={bp({ base: '96vw', lg: '90vw' })} py="5">
           <Flex justifyContent="space-between" align="center">
             <HStack spacing="1rem" alignItems="center">
               <Box as={HiUser} boxSize="25px" />
-              <Text fontWeight="bold">{user.email}</Text>
+              <Text fontWeight="bold" fontSize={bp({ base: 'md', lg: 'md1' })}>
+                {user.email}
+              </Text>
             </HStack>
-            <HStack spacing="1rem">
+            <HStack spacing="1rem" d={menuDisplay}>
               <Button
                 leftIcon={<FaCog />}
                 colorScheme="primary"
@@ -60,6 +88,36 @@ const Header = () => {
               </Link>
               <Box as={FiPower} boxSize="25px" onClick={handleLogout} cursor="pointer" />
             </HStack>
+            <Box pos="relative" zIndex="1000" d={bp({ base: 'block', lg: 'none' })}>
+              <CMenu>
+                <MenuButton
+                  as={IconButton}
+                  aria-label="Options"
+                  icon={<HiMenuAlt3 />}
+                  size="lg"
+                  variant="outline"
+                />
+                <MenuList>
+                  <MenuItem
+                    icon={<FaCog />}
+                    onClick={() => {
+                      setCurrentModal({
+                        title: 'Preferences',
+                        component: <PreferencesFrom />
+                      });
+                      onOpen();
+                    }}>
+                    Preferences
+                  </MenuItem>
+                  <CLink href="/account/discover">
+                    <MenuItem icon={<MdMovie />}>Discover shows</MenuItem>
+                  </CLink>
+                  <MenuItem onClick={handleLogout} icon={<FiPower />}>
+                    Log out
+                  </MenuItem>
+                </MenuList>
+              </CMenu>
+            </Box>
           </Flex>
         </Container>
       )}

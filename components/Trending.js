@@ -9,7 +9,8 @@ import {
   VStack,
   SimpleGrid,
   Flex,
-  Skeleton
+  Skeleton,
+  useBreakpointValue as bp
 } from '@chakra-ui/react';
 import supabase from '../lib/supabaseClient';
 import MovieCard from './cards/MovieCard';
@@ -48,42 +49,46 @@ const Trending = () => {
   return (
     <VStack spacing="3rem" align="left">
       <Box>
-        <HStack align="left">
-          <Heading fontSize="lg" as="h1">
+        <HStack align="left" flexDir={bp({ base: 'column', lg: 'row' })}>
+          <Heading fontSize={bp({ base: 'md2', lg: 'lg' })} as="h1">
             What's hot ?
           </Heading>
-          <Button
-            bg="#fff"
-            border="1px solid #DE0913"
-            color="#DE0913"
-            _hover={{
-              backgroundColor: '#DE0913',
-              color: '#fff'
-            }}
-            _focus={{
-              backgroundColor: '#DE0913',
-              color: '#fff'
-            }}
-            onClick={() => loadTrendingByNetwork(1)}>
-            Netflix
-          </Button>
-          <Button
-            bg="#fff"
-            border="1px solid #1CAFDF"
-            color="#1CAFDF"
-            _hover={{
-              backgroundColor: '#1CAFDF',
-              color: '#fff'
-            }}
-            _focus={{
-              backgroundColor: '#1CAFDF',
-              color: '#fff'
-            }}
-            onClick={() => loadTrendingByNetwork(2)}>
-            Prime Video
-          </Button>
+          <HStack
+            mt={bp({ base: '.8rem !important', lg: '0rem' })}
+            ml={bp({ base: '0 !important', lg: '0rem' })}>
+            <Button
+              bg="#fff"
+              border="1px solid #DE0913"
+              color="#DE0913"
+              _hover={{
+                backgroundColor: '#DE0913',
+                color: '#fff'
+              }}
+              _focus={{
+                backgroundColor: '#DE0913',
+                color: '#fff'
+              }}
+              onClick={() => loadTrendingByNetwork(1)}>
+              Netflix
+            </Button>
+            <Button
+              bg="#fff"
+              border="1px solid #1CAFDF"
+              color="#1CAFDF"
+              _hover={{
+                backgroundColor: '#1CAFDF',
+                color: '#fff'
+              }}
+              _focus={{
+                backgroundColor: '#1CAFDF',
+                color: '#fff'
+              }}
+              onClick={() => loadTrendingByNetwork(2)}>
+              Prime Video
+            </Button>
+          </HStack>
         </HStack>
-        <SimpleGrid columns={4} spacingX="40px" mt="4">
+        <SimpleGrid columns={bp({ base: 2, lg: 4 })} spacing="40px" mt="5">
           {!isLoading &&
             trending.map((media) => {
               return (
@@ -100,7 +105,7 @@ const Trending = () => {
             })}
           {isLoading &&
             [...new Array(4)].map(() => {
-              return <Skeleton h="350px" borderRadius="4px"></Skeleton>;
+              return <Skeleton borderRadius="4px" h="350px"></Skeleton>;
             })}
         </SimpleGrid>
         <Flex justify="flex-end" mt="4">

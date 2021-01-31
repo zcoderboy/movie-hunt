@@ -21,6 +21,9 @@ const customTheme = extendTheme({
     md2: '24px',
     lg: '32px',
     xl: '48px'
+  },
+  sizes: {
+    xl: '55rem'
   }
 });
 

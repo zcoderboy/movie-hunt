@@ -4,6 +4,8 @@ import {
   Box,
   Text,
   VStack,
+  useMediaQuery,
+  useBreakpointValue as bp,
   Input,
   Select,
   Heading,
@@ -17,6 +19,7 @@ import Trending from '../components/Trending';
 import SearchForm from '../components/forms/SearchForm';
 
 export default function Home() {
+  const [md] = useMediaQuery('(max-width: 768px)');
   return (
     <>
       <div>
@@ -26,7 +29,7 @@ export default function Home() {
         </Head>
         <VStack spacing="3rem" align="left">
           <Hero />
-          <Container maxW="90vw" marginInlineStart="auto !important">
+          <Container maxW={bp({ base: '96vw', lg: '90vw' })} marginInlineStart="auto !important">
             <SearchForm />
             <Trending />
           </Container>
@@ -37,9 +40,9 @@ export default function Home() {
               backgroundPosition="center"
               pos="relative"
               h="180px">
-              <Container pos="relative" zIndex="1" maxW="90vw" h="100%">
+              <Container pos="relative" zIndex="1" maxW={bp({ base: '96vw', lg: '90vw' })} h="100%">
                 <VStack align="left" justifyContent="center" h="100%">
-                  <Text color="white" fontSize="md2">
+                  <Text color="white" fontSize={bp({ base: 'md1', lg: 'md2' })}>
                     Register now and save your <br />
                     preferences to get better suggestions
                   </Text>

@@ -6,18 +6,13 @@ import {
   Button,
   Link,
   HStack,
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  FormHelperText,
-  Input,
-  useDisclosure,
-  VStack
+  useMediaQuery,
+  useBreakpointValue as bp,
+  useDisclosure
 } from '@chakra-ui/react';
-import { UserContext } from '../context/UserContext';
 import RegisterForm from './forms/RegisterForm';
 import Modal from './Modal';
-import { useContext, useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import supabase from '../lib/supabaseClient';
 import LoginForm from './forms/LoginForm';
 
@@ -30,26 +25,30 @@ const Hero = () => {
     onOpen();
   };
 
+  useEffect(() => {}, []);
+
   return (
     <Flex
       w="100vw"
       flexDir="column"
       backgroundImage={`url(/images/hero.jpg)`}
-      h="50vh"
+      h={bp({ base: '30vh', lg: '50vh' })}
       backgroundSize="100vw"
       backgroundPosition="center"
+      backgroundRepeat="no-repeat"
       pos="relative">
+      {/* {console.log(md)} */}
       <Container
         d="flex"
         flexDir="column"
         h="100%"
         justifyContent="center"
-        maxW="90vw"
+        maxW={bp({ base: '96vw', lg: '90vw' })}
         color="white"
         zIndex="100"
         pos="relative">
         <Box>
-          <Text fontWeight="bold" fontSize="lg" lineHeight="1.2">
+          <Text fontWeight="bold" fontSize={bp({ base: 'md1', lg: 'lg' })} lineHeight="1.2">
             What if you stop searching
             <br /> and start watching
           </Text>
@@ -65,7 +64,7 @@ const Hero = () => {
               textDecor="underline"
               color="white"
               fontWeight="bold"
-              fontSize="20px">
+              fontSize={bp({ base: '18px', lg: '20px' })}>
               Register
             </Link>
             <Link
@@ -74,7 +73,7 @@ const Hero = () => {
               textDecor="underline"
               color="white"
               fontWeight="bold"
-              fontSize="20px">
+              fontSize={bp({ base: '18px', lg: '20px' })}>
               Login
             </Link>
           </HStack>
@@ -88,7 +87,11 @@ const Hero = () => {
         h="100%"
         bgGradient="linear(to-r, rgba(0,0,0,0.5), rgba(0,0,0,0))"
       />
-      <Modal isOpen={isOpen} onClose={onClose} title={modalState == 1 ? 'Register' : 'Login'}>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        title={modalState == 1 ? 'Register' : 'Login'}
+        size="md">
         {modalState == 1 ? <RegisterForm /> : <LoginForm />}
       </Modal>
     </Flex>

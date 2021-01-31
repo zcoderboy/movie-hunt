@@ -10,7 +10,8 @@ import {
   Button,
   Image,
   VStack,
-  IconButton
+  IconButton,
+  useBreakpointValue as bp
 } from '@chakra-ui/react';
 import withAuth from '../../components/withAuth';
 import supabase from '../../lib/supabaseClient';
@@ -24,7 +25,10 @@ const Discover = () => {
   const user = supabase.auth.user();
   const [medias, setMedias] = useState([]);
   const [preferences, setPreferences] = useState({ genres: [] });
+
   const [isEmpty, setIsEmpty] = useState(false);
+  const mt = bp({ base: '4rem' });
+  const fs = bp({ base: 'md', lg: 'md1' });
 
   const getPreferences = useCallback(async () => {
     try {
@@ -105,23 +109,24 @@ const Discover = () => {
   }, []);
 
   return (
-    <Container maxW="90vw" my="8">
+    <Container maxW={bp({ base: '96vw', lg: '90vw' })} my="8">
       <Link href="/">
         <IconButton
           colorScheme="primary"
           mb="4"
+          d={bp({ base: 'none', lg: 'flex' })}
           fontSize="20px"
           aria-label="Back to homepage"
           icon={<AiFillHome />}
         />
       </Link>
-      <Text fontSize="md2" fontWeight="bold">
+      <Text fontSize={bp({ base: 'md1', lg: 'md2' })} fontWeight="bold">
         Discover shows based on your preferences
       </Text>
-      <HStack spacing="1rem" mt="1rem" h="30px">
+      <HStack spacing="1rem" mt="1rem" h="30px" flexWrap="wrap">
         {preferences.genres.map((genre) => {
           return (
-            <Badge variant="outline" colorScheme="primary" p=".3rem">
+            <Badge variant="outline" colorScheme="primary" p=".3rem" mb="1rem">
               {genre.name}
             </Badge>
           );
@@ -156,7 +161,7 @@ const Discover = () => {
         )}
       </HStack>
       <HStack spacing="1rem" mt="1rem" h="30px"></HStack>
-      <SimpleGrid columns={4} spacing="40px" mt="7">
+      <SimpleGrid columns={bp({ base: 2, lg: 4 })} spacing="40px" mt="7">
         {medias.length !== 0 &&
           medias.map((media) => {
             return (
@@ -176,9 +181,9 @@ const Discover = () => {
           })}
       </SimpleGrid>
       {isEmpty && (
-        <VStack justifyContent="center">
+        <VStack justifyContent="center" mt={mt}>
           <Box as={FaRegSadCry} boxSize="70px" />
-          <Text textAlign="center" fontSize="md1">
+          <Text textAlign="center" fontSize={fs}>
             Ooops, we couldn't find any matching shows.
             <br />
             Try adjusting your preferences.

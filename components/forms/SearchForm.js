@@ -1,10 +1,21 @@
-import { Select as CSelect, HStack, Input, Button, Box, Heading } from '@chakra-ui/react';
+import {
+  Select as CSelect,
+  HStack,
+  Input,
+  chakra,
+  Button,
+  Box,
+  Heading,
+  useBreakpointValue as bp
+} from '@chakra-ui/react';
 import { SearchContext } from '../../context/SearchContext';
 import { useContext, useState, useEffect, useCallback } from 'react';
 import Select from 'react-select';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Router from 'next/router';
+
+const RSelect = chakra(Select);
 
 const customStyles = {
   option: (provided, state) => ({
@@ -25,7 +36,8 @@ const customStyles = {
   }),
   container: (provided, state) => ({
     ...provided,
-    flex: '1'
+    flex: '1',
+    width: '100%'
   }),
   placeholder: (provided, state) => ({
     ...provided,
@@ -93,23 +105,27 @@ const SearchForm = () => {
 
   return (
     <Box mb="3rem">
-      <Heading fontSize="lg" as="h1">
+      <Heading fontSize={bp({ base: 'md2', lg: 'lg' })} as="h1">
         What are you looking for ?
       </Heading>
       <form onSubmit={formik.handleSubmit}>
-        <HStack mt="4">
-          <Select
+        <HStack mt="4" flexDir={bp({ base: 'column', lg: 'row' })}>
+          <RSelect
             onChange={(option) => setSelected(option)}
             styles={customStyles}
             placeholder="Genre"
             name="genre"
+            mb={bp({ base: '1.5rem', lg: '0rem' })}
             options={genres}
           />
           <Input
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.year}
+            inputMode="numeric"
             flex="1"
+            ml={bp({ base: '0 !important', lg: 'auto' })}
+            mb={bp({ base: '1.5rem', lg: '0rem' })}
             name="year"
             focusBorderColor="#F97B2F"
             placeholder="Min. Year"
@@ -120,6 +136,8 @@ const SearchForm = () => {
             onBlur={formik.handleBlur}
             value={formik.values.network}
             flex="1"
+            mb={bp({ base: '1.5rem', lg: '0rem' })}
+            ml={bp({ base: '0 !important', lg: 'auto' })}
             name="network"
             focusBorderColor="#F97B2F"
             placeholder="Streaming service"
@@ -132,6 +150,7 @@ const SearchForm = () => {
             isLoading={isLoading}
             loadingText="Searching..."
             type="submit"
+            alignSelf={bp({ base: 'start' })}
             colorScheme="primary"
             p="1rem 4rem"
             h="3rem">

@@ -6,7 +6,8 @@ import {
   HStack,
   Button,
   Box,
-  IconButton
+  IconButton,
+  useBreakpointValue as bp
 } from '@chakra-ui/react';
 import { useEffect, useCallback, useState } from 'react';
 import supabase from '../lib/supabaseClient';
@@ -40,21 +41,22 @@ const TrendingMovies = () => {
     });
   }, []);
   return (
-    <Container maxW="90vw" mt="8">
+    <Container maxW={bp({ base: '96vw', lg: '90vw' })} my="8">
       <Link href="/">
         <IconButton
           colorScheme="primary"
           mb="4"
+          d={bp({ base: 'none', lg: 'flex' })}
           fontSize="20px"
           aria-label="Back to homepage"
           icon={<AiFillHome />}
         />
       </Link>
-      <HStack align="left" spacing="2rem">
-        <Text fontSize="md2" fontWeight="bold">
+      <HStack align="left" spacing="2rem" flexDir={bp({ base: 'column', lg: 'row' })}>
+        <Text fontSize="md2" fontWeight="bold" mb={bp({ base: '.8rem', lg: '0rem' })}>
           Trending shows 🔥
         </Text>
-        <Box>
+        <Box ml={bp({ base: '0rem !important', lg: 'auto' })}>
           <Button
             mr="2"
             bg="#fff"
@@ -88,7 +90,10 @@ const TrendingMovies = () => {
           </Button>
         </Box>
       </HStack>
-      <SimpleGrid columns={4} spacing="40px" mt="7">
+      <SimpleGrid
+        columns={bp({ base: 2, lg: 4 })}
+        spacing={bp({ base: '20px', lg: '40px' })}
+        mt="7">
         {trends.length !== 0 &&
           trends.map((media) => {
             return (

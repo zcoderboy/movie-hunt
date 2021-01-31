@@ -158,6 +158,7 @@ const PreferencesFrom = () => {
                 focusBorderColor="#F97B2F"
                 type="number"
                 placeholder="2010"
+                inputMode="numeric"
                 name="yearMin"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -185,6 +186,7 @@ const PreferencesFrom = () => {
                 placeholder="3"
                 min="1"
                 max="10"
+                inputMode="numeric"
                 name="rateMin"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
