@@ -35,11 +35,12 @@ const RegisterForm = () => {
       setEmail={setEmail}
       setPassword={setPassword}
       handleSubmit={handleRegister}
+      helper={false}
     />
   );
 };
 
-export const FormBody = ({ isLoading, setEmail, setPassword, handleSubmit }) => {
+export const FormBody = ({ isLoading, setEmail, setPassword, handleSubmit, helper }) => {
   return (
     <form onSubmit={handleSubmit}>
       <VStack spacing="2rem" align="left">
@@ -51,7 +52,7 @@ export const FormBody = ({ isLoading, setEmail, setPassword, handleSubmit }) => 
             focusBorderColor="#F97B2F"
             placeholder="Username"
           />
-          <FormHelperText>
+          <FormHelperText d={helper ? 'block' : 'none'}>
             Throw in a dummy email if you want, just need it to save your preferences.
           </FormHelperText>
         </FormControl>
