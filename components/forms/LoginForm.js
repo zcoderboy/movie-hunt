@@ -5,19 +5,29 @@ import { UserContext } from '../../context/UserContext';
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { loginUser } = useContext(UserContext);
 
   const handleLogin = (e) => {
     e.preventDefault();
+    setIsLoading(true);
     loginUser({ email: email, password: password })
       .then(() => {
         window.location.href = '/';
       })
       .catch((error) => {
-        alert('An error occurred. Try again later');
+        setIsLoading(false);
+        alert("Couldn't find an account with the provided credentials.");
       });
   };
-  return <FormBody setEmail={setEmail} setPassword={setPassword} handleSubmit={handleLogin} />;
+  return (
+    <FormBody
+      isLoading={isLoading}
+      setEmail={setEmail}
+      setPassword={setPassword}
+      handleSubmit={handleLogin}
+    />
+  );
 };
 
 export default LoginForm;

@@ -23,10 +23,6 @@ export default function Home() {
   return (
     <>
       <div>
-        <Head>
-          <title>Movie Hunt</title>
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
         <VStack spacing="3rem" align="left">
           <Hero />
           <Container maxW={bp({ base: '96vw', lg: '90vw' })} marginInlineStart="auto !important">

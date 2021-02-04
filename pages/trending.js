@@ -14,6 +14,7 @@ import supabase from '../lib/supabaseClient';
 import MovieCard from '../components/cards/MovieCard';
 import Link from 'next/link';
 import { AiFillHome } from 'react-icons/ai';
+import Head from 'next/head';
 
 const TrendingMovies = () => {
   const [trends, setTrends] = useState([]);
@@ -42,6 +43,9 @@ const TrendingMovies = () => {
   }, []);
   return (
     <Container maxW={bp({ base: '96vw', lg: '90vw' })} my="8">
+      <Head>
+        <title>Movie Hunt - Trending movies and shows</title>
+      </Head>
       <Link href="/">
         <IconButton
           colorScheme="primary"
