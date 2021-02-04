@@ -50,7 +50,7 @@ const Hero = () => {
         <Box>
           <Text fontWeight="bold" fontSize={bp({ base: 'md1', lg: 'lg' })} lineHeight="1.2">
             What if you stop searching
-            <br /> and start watching
+            <br /> and start watching ?
           </Text>
           <Button mt="5" colorScheme="primary">
             Set my preferences
