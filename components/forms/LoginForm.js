@@ -24,7 +24,7 @@ const LoginForm = () => {
     <FormBody
       isLoading={isLoading}
       setEmail={setEmail}
-      helper={true}
+      helper={false}
       setPassword={setPassword}
       handleSubmit={handleLogin}
     />

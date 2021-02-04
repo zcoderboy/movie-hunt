@@ -35,7 +35,7 @@ const RegisterForm = () => {
       setEmail={setEmail}
       setPassword={setPassword}
       handleSubmit={handleRegister}
-      helper={false}
+      helper={true}
     />
   );
 };
@@ -51,6 +51,7 @@ export const FormBody = ({ isLoading, setEmail, setPassword, handleSubmit, helpe
             h="3rem"
             focusBorderColor="#F97B2F"
             placeholder="Username"
+            type="email"
           />
           <FormHelperText d={helper ? 'block' : 'none'}>
             Throw in a dummy email if you want, just need it to save your preferences.
