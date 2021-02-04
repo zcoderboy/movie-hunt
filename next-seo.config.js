@@ -5,7 +5,7 @@ export default {
     title: 'Movie Hunt - Discover movies and TV Shows to enjoy. Made by @zcoderboy',
     description: 'Discover movies and TV Shows to enjoy. Made by @zcoderboy',
     url: 'https://movie-hunt.vercel.app/',
-    site_name: 'Movie Hunt',
+    site_name: 'Movie Hunt - Discover movies and TV Shows to enjoy. Made by @zcoderboy',
     images: [
       {
         url: 'https://movie-hunt.vercel.app/website-img.jpg',
