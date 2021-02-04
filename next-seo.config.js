@@ -2,7 +2,7 @@ export default {
   openGraph: {
     type: 'website',
     locale: 'en_IE',
-    title: 'Movie Hunt',
+    title: 'Movie Hunt - Discover movies and TV Shows to enjoy. Made by @zcoderboy',
     description: 'Discover movies and TV Shows to enjoy. Made by @zcoderboy',
     url: 'https://movie-hunt.vercel.app/',
     site_name: 'Movie Hunt',
