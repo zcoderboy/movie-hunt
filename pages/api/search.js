@@ -31,8 +31,8 @@ async function getMedias(query) {
 }
 export default async (req, res) => {
   try {
-    res.statusCode = 200;
     const data = await getMedias(JSON.parse(req.body));
+    res.statusCode = 200;
     res.json(data);
   } catch (error) {
     res.status(500);

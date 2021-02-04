@@ -46,7 +46,12 @@ const Header = () => {
   const [currentModal, setCurrentModal] = useState({});
   const router = useRouter();
   const user = supabase.auth.user();
+
   const menuDisplay = bp({ base: 'none', lg: 'flex' });
+  const menuHamburger = bp({ base: 'block', lg: 'none' });
+  const maxW = bp({ base: '96vw', lg: '90vw' });
+  const fontSize = bp({ base: 'md', lg: 'md1' });
+
   const handleLogout = () => {
     logoutUser()
       .then(() => {
@@ -59,17 +64,16 @@ const Header = () => {
   return (
     <Flex boxShadow="0 .5rem 1rem rgba(0,0,0,.15)" alignItems="center">
       {supabase.auth.session() && (
-        <Container maxW={bp({ base: '96vw', lg: '90vw' })} py="5">
+        <Container maxW={maxW} py="5">
           <Flex justifyContent="space-between" align="center">
             <HStack spacing="1rem" alignItems="center">
               <Box as={HiUser} boxSize="25px" />
-              <Text fontWeight="bold" fontSize={bp({ base: 'md', lg: 'md1' })}>
+              <Text fontWeight="bold" fontSize={fontSize}>
                 {user.email}
               </Text>
             </HStack>
             <HStack spacing="1rem" d={menuDisplay}>
               <Button
-                leftIcon={<FaCog />}
                 colorScheme="primary"
                 variant="outline"
                 onClick={() => {
@@ -82,13 +86,13 @@ const Header = () => {
                 Update my preferences
               </Button>
               <Link href="/account/discover">
-                <Button leftIcon={<MdMovie />} colorScheme="primary" variant="outline">
+                <Button colorScheme="primary" variant="outline">
                   Discover shows
                 </Button>
               </Link>
               <Box as={FiPower} boxSize="25px" onClick={handleLogout} cursor="pointer" />
             </HStack>
-            <Box pos="relative" zIndex="1000" d={bp({ base: 'block', lg: 'none' })}>
+            <Box pos="relative" zIndex="1000" d={menuHamburger}>
               <CMenu>
                 <MenuButton
                   as={IconButton}
@@ -163,7 +167,7 @@ const Header = () => {
           </Flex>
         </Container>
       )}
-      <Modal isOpen={isOpen} onClose={onClose} title={currentModal.title}>
+      <Modal isOpen={isOpen} onClose={onClose} title={currentModal.title} size="lg">
         {currentModal.component}
       </Modal>
     </Flex>
