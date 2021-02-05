@@ -68,7 +68,7 @@ const PreferencesFrom = () => {
   const getPreferences = useCallback(async () => {
     try {
       const { data } = await supabase.from('preferences').select('*').eq('user_id', user.id);
-      return data ? JSON.parse(data[0].value) : data;
+      return data.length ? JSON.parse(data[0].value) : data;
     } catch (error) {
       alert(error);
     }

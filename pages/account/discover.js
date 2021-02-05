@@ -33,7 +33,7 @@ const Discover = () => {
   const getPreferences = useCallback(async () => {
     try {
       const { data } = await supabase.from('preferences').select('*').eq('user_id', user.id);
-      return data ? JSON.parse(data[0].value) : data;
+      return data.length ? JSON.parse(data[0].value) : 0;
     } catch (error) {
       alert(error);
     }
@@ -103,6 +103,8 @@ const Discover = () => {
             setMedias(matches);
           }
         });
+      } else {
+        setIsEmpty(true);
       }
     });
     return () => {};
@@ -168,7 +170,6 @@ const Discover = () => {
           );
         })}
       </HStack>
-      <HStack spacing="1rem" mt="1rem" h="30px"></HStack>
       <SimpleGrid columns={bp({ base: 2, lg: 4 })} spacing="40px" mt="7">
         {medias.length !== 0 &&
           medias.map((media) => {
