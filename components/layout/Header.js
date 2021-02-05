@@ -126,13 +126,16 @@ const Header = () => {
         </Container>
       )}
       {!supabase.auth.session() && router.pathname !== '/' && (
-        <Container maxW="90vw" py="5">
+        <Container maxW={maxW} py="5">
           <Flex justifyContent="space-between" align="center">
             <HStack spacing="1rem" alignItems="center">
               <Link href="/">
-                <Text fontWeight="bold" fontSize="md1" cursor="pointer">
-                  🎬 Movie Hunt
-                </Text>
+                <Flex fontWeight="bold" fontSize="md1" cursor="pointer">
+                  🎬{' '}
+                  <Text as="span" d={menuDisplay} ml="2">
+                    Movie Hunt
+                  </Text>
+                </Flex>
               </Link>
             </HStack>
             <HStack spacing="1rem">
