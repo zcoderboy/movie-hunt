@@ -21,7 +21,7 @@ import { AiFillHome } from 'react-icons/ai';
 import MovieCard from '../../components/cards/MovieCard';
 import Link from 'next/link';
 
-const Discover = () => {
+const Discover = ({ movies }) => {
   const user = supabase.auth.user();
   const [medias, setMedias] = useState([]);
   const [preferences, setPreferences] = useState({ genres: [] });
@@ -34,15 +34,6 @@ const Discover = () => {
     try {
       const { data } = await supabase.from('preferences').select('*').eq('user_id', user.id);
       return data.length ? JSON.parse(data[0].value) : 0;
-    } catch (error) {
-      alert(error);
-    }
-  }, []);
-
-  const getMedias = useCallback(async () => {
-    try {
-      const { data } = await supabase.from('movies').select('*');
-      return data;
     } catch (error) {
       alert(error);
     }
@@ -95,14 +86,12 @@ const Discover = () => {
     getPreferences().then((preferences) => {
       if (preferences) {
         setPreferences(preferences);
-        getMedias().then((medias) => {
-          let matches = medias.filter((media) => checkPreference(media, preferences));
-          if (matches.length === 0) {
-            setIsEmpty(true);
-          } else {
-            setMedias(matches);
-          }
-        });
+        let matches = movies.filter((media) => checkPreference(media, preferences));
+        if (matches.length === 0) {
+          setIsEmpty(true);
+        } else {
+          setMedias(matches);
+        }
       } else {
         setIsEmpty(true);
       }
@@ -204,3 +193,12 @@ const Discover = () => {
 };
 
 export default withAuth(Discover);
+
+export async function getStaticProps(context) {
+  const supabase = require('@supabase/supabase-js');
+  const client = supabase.createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+  let { data: movies, error } = await client.from('movies').select('*');
+  return {
+    props: { movies }
+  };
+}

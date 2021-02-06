@@ -18,8 +18,7 @@ import Footer from '../components/layout/Footer';
 import Trending from '../components/Trending';
 import SearchForm from '../components/forms/SearchForm';
 
-export default function Home() {
-  const [md] = useMediaQuery('(max-width: 768px)');
+export default function Home({ trending }) {
   return (
     <>
       <div>
@@ -27,7 +26,7 @@ export default function Home() {
           <Hero />
           <Container maxW={bp({ base: '96vw', lg: '90vw' })} marginInlineStart="auto !important">
             <SearchForm />
-            <Trending />
+            <Trending data={trending} />
           </Container>
           {!supabase.auth.session() && (
             <Box
@@ -62,4 +61,13 @@ export default function Home() {
       <Footer />
     </>
   );
+}
+
+export async function getStaticProps(context) {
+  const supabase = require('@supabase/supabase-js');
+  const client = supabase.createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+  let { data: trending, error } = await client.from('trending').select('*').range(0, 3);
+  return {
+    props: { trending }
+  };
 }

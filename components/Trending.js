@@ -12,40 +12,28 @@ import {
   Skeleton,
   useBreakpointValue as bp
 } from '@chakra-ui/react';
-import supabase from '../lib/supabaseClient';
 import MovieCard from './cards/MovieCard';
 import { useState, useCallback, useEffect } from 'react';
 import { TiArrowRight } from 'react-icons/ti';
 import Link from 'next/link';
 
-const Trending = () => {
-  const [trending, setTrending] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const getTrending = useCallback(async () => {
-    let { data: trending, error } = await supabase.from('trending').select('*').range(0, 3);
-    setTrending(trending);
-  }, []);
+const Trending = ({ data }) => {
+  const [trending, setTrending] = useState(data);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function loadTrendingByNetwork(network) {
     setIsLoading(true);
-    network = network == 1 ? 'NETFLIX' : 'AMAZON PRIME VIDEO';
-    let { data: trending, error } = await supabase
-      .from('trending')
-      .select('*')
-      .eq('provider', network)
-      .range(0, 3);
-
-    setTrending(trending);
+    let response = await fetch('/api/trends', {
+      method: 'POST',
+      body: JSON.stringify({ network: network })
+    });
+    if (response.ok) {
+      setTrending(await response.json());
+    }
     setIsLoading(false);
   }
 
-  useEffect(() => {
-    getTrending().then(() => {
-      setIsLoading(false);
-    });
-    return () => {};
-  }, []);
+  useEffect(() => {}, []);
   return (
     <VStack spacing="3rem" align="left">
       <Box>

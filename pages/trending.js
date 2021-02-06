@@ -10,37 +10,26 @@ import {
   useBreakpointValue as bp
 } from '@chakra-ui/react';
 import { useEffect, useCallback, useState } from 'react';
-import supabase from '../lib/supabaseClient';
 import MovieCard from '../components/cards/MovieCard';
 import Link from 'next/link';
 import { AiFillHome } from 'react-icons/ai';
 import Head from 'next/head';
 
-const TrendingMovies = () => {
-  const [trends, setTrends] = useState([]);
-  const getTrending = useCallback(async () => {
-    try {
-      const { data } = await supabase.from('trending').select('*');
-      return data;
-    } catch (error) {
-      alert(error);
-    }
-  }, []);
+const TrendingMovies = ({ trending }) => {
+  const [trends, setTrends] = useState(trending);
+
   async function loadTrendingByNetwork(network) {
     setTrends([]);
-    network = network == 1 ? 'NETFLIX' : 'AMAZON PRIME VIDEO';
-    let { data: trending, error } = await supabase
-      .from('trending')
-      .select('*')
-      .eq('provider', network);
-    setTrends(trending);
+    let response = await fetch('/api/trends', {
+      method: 'POST',
+      body: JSON.stringify({ network: network })
+    });
+    if (response.ok) {
+      setTrends(await response.json());
+    }
   }
 
-  useEffect(() => {
-    getTrending().then((trends) => {
-      setTrends(trends);
-    });
-  }, []);
+  useEffect(() => {}, []);
   return (
     <Container maxW={bp({ base: '96vw', lg: '90vw' })} my="8">
       <Head>
@@ -120,5 +109,14 @@ const TrendingMovies = () => {
     </Container>
   );
 };
+
+export async function getStaticProps(context) {
+  const supabase = require('@supabase/supabase-js');
+  const client = supabase.createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+  let { data: trending, error } = await client.from('trending').select('*');
+  return {
+    props: { trending }
+  };
+}
 
 export default TrendingMovies;
