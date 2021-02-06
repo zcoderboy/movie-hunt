@@ -38,14 +38,11 @@ const PreferencesFrom = () => {
   };
 
   const getGenres = useCallback(async () => {
-    let response = await fetch(`${process.env.NEXT_PUBLIC_IMDB_BASE_URL}/genre/movie/list`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_IMDB_TOKEN}`
-      }
-    });
-    let data = await response.json();
-    setGenres(transformToOption(data.genres));
+    let response = await fetch('/api/getGenres');
+    if (response.ok) {
+      let data = await response.json();
+      setGenres(transformToOption(data));
+    }
   }, []);
 
   const savePreferences = async (values) => {
