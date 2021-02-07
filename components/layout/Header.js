@@ -37,6 +37,7 @@ import LoginForm from '../forms/LoginForm';
 import RegisterForm from '../forms/RegisterForm';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import useUser from '../../utils/useUser';
+import { isEmpty } from 'lodash';
 
 const CMenu = chakra(Menu);
 
@@ -63,7 +64,7 @@ const Header = () => {
   };
   return (
     <Flex boxShadow="0 .5rem 1rem rgba(0,0,0,.15)" alignItems="center">
-      {Object.keys(user).length && (
+      {!isEmpty(user) && (
         <Container maxW={maxW} py="5">
           <Flex justifyContent="space-between" align="center">
             <HStack spacing="1rem" alignItems="center">
@@ -125,7 +126,7 @@ const Header = () => {
           </Flex>
         </Container>
       )}
-      {!user && router.pathname !== '/' && (
+      {isEmpty(user) && router.pathname !== '/' && (
         <Container maxW={maxW} py="5">
           <Flex justifyContent="space-between" align="center">
             <HStack spacing="1rem" alignItems="center">
