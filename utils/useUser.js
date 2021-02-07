@@ -1,6 +1,6 @@
 import { useLayoutEffect, useState } from 'react';
 
-export default function useUser() {
+export default function useUser(checkRender = false, setRender = false) {
   const [user, setUser] = useState({});
 
   useLayoutEffect(() => {
@@ -12,6 +12,7 @@ export default function useUser() {
       })
       .then((data) => {
         setUser(data);
+        if (checkRender) setRender(true);
       });
   }, []);
 

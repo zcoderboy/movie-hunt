@@ -6,12 +6,20 @@ export default async (req, res) => {
     const body = JSON.parse(req.body);
     let network = body.network;
     network = network == 1 ? 'NETFLIX' : 'AMAZON PRIME VIDEO';
-    let { data: trending, error } = await client
-      .from('trending')
-      .select('*')
-      .eq('provider', network);
-    res.statusCode = 200;
-    res.json(trending);
+    if (req.query.size) {
+      var { data: trending, error } = await client
+        .from('trending')
+        .select('*')
+        .eq('provider', network)
+        .range(0, req.query.size - 1);
+    } else {
+      var { data: trending, error } = await client
+        .from('trending')
+        .select('*')
+        .eq('provider', network);
+    }
+    if (error) return res.status(401).json({ error: error.message });
+    res.status(200).json(trending);
   } catch (error) {
     res.status(500);
     res.send(error.toString());

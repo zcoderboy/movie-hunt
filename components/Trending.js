@@ -23,7 +23,7 @@ const Trending = ({ data }) => {
 
   async function loadTrendingByNetwork(network) {
     setIsLoading(true);
-    let response = await fetch('/api/getTrending', {
+    let response = await fetch('/api/getTrending?size=4', {
       method: 'POST',
       body: JSON.stringify({ network: network })
     });

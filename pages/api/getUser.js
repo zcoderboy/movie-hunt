@@ -18,5 +18,5 @@ export default async (req, res) => {
     }
     return res.status(200).json(user);
   }
-  return res.status(401).send('');
+  return res.status(401).json({});
 };
