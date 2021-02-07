@@ -72,7 +72,7 @@ const Header = () => {
                 {user.email}
               </Text>
             </HStack>
-            <HStack spacing="1rem" d={bp({ base: 'none', lg: 'flex' })}>
+            <HStack spacing="1rem" d={menuDisplay}>
               <Button
                 colorScheme="primary"
                 variant="outline"
@@ -92,7 +92,7 @@ const Header = () => {
               </a>
               <Box as={FiPower} boxSize="25px" onClick={handleLogout} cursor="pointer" />
             </HStack>
-            <Box pos="relative" zIndex="1000" d={bp({ base: 'block', lg: 'none' })}>
+            <Box pos="relative" zIndex="1000" d={menuHamburger}>
               <CMenu>
                 <MenuButton
                   as={IconButton}
