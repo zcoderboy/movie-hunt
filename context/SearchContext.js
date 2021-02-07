@@ -1,5 +1,4 @@
 import React from 'react';
-import supabase from '../lib/supabaseClient';
 import { useReducer } from 'react';
 
 const DEFAULT_TYPE = 'SEARCH';

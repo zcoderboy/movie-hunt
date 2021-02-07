@@ -97,14 +97,14 @@ const Trending = ({ data }) => {
             })}
         </SimpleGrid>
         <Flex justify="flex-end" mt="4">
-          <Link href="/trending">
+          <a href="/trending">
             <Box d="flex" alignItems="center">
               <Text cursor="pointer" color="primary.500" fontSize="md1">
                 Discover all trending shows
               </Text>
               <Box color="primary.500" as={TiArrowRight} boxSize="30px" />
             </Box>
-          </Link>
+          </a>
         </Flex>
       </Box>
     </VStack>

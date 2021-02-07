@@ -6,23 +6,21 @@ import {
   Badge,
   HStack,
   Skeleton,
-  Flex,
-  Button,
   Image,
   VStack,
   IconButton,
   useBreakpointValue as bp
 } from '@chakra-ui/react';
 import withAuth from '../../components/withAuth';
-import supabase from '../../lib/supabaseClient';
 import { useEffect, useCallback, useState } from 'react';
 import { FaRegSadCry } from 'react-icons/fa';
 import { AiFillHome } from 'react-icons/ai';
 import MovieCard from '../../components/cards/MovieCard';
 import Link from 'next/link';
+import useUser from '../../utils/useUser';
 
 const Discover = ({ movies }) => {
-  const user = supabase.auth.user();
+  const user = useUser();
   const [medias, setMedias] = useState([]);
   const [preferences, setPreferences] = useState({ genres: [] });
 
@@ -31,11 +29,9 @@ const Discover = ({ movies }) => {
   const fs = bp({ base: 'md', lg: 'md1' });
 
   const getPreferences = useCallback(async () => {
-    try {
-      const { data } = await supabase.from('preferences').select('*').eq('user_id', user.id);
-      return data.length ? JSON.parse(data[0].value) : 0;
-    } catch (error) {
-      alert(error);
+    const response = await fetch('/api/getPreferences');
+    if (response.ok) {
+      return await response.json();
     }
   }, []);
 
@@ -194,7 +190,7 @@ const Discover = ({ movies }) => {
 
 export default withAuth(Discover);
 
-export async function getStaticProps(context) {
+export async function getServerSideProps({ req, res }) {
   const supabase = require('@supabase/supabase-js');
   const client = supabase.createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
   let { data: movies, error } = await client.from('movies').select('*');

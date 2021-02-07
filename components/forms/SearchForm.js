@@ -88,6 +88,9 @@ const SearchForm = () => {
         doSearch(query).then((data) => {
           if (data.length) {
             Router.push('/search');
+          } else {
+            setIsLoading(false);
+            alert('No results found');
           }
         });
       } else {

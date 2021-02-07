@@ -20,7 +20,7 @@ const TrendingMovies = ({ trending }) => {
 
   async function loadTrendingByNetwork(network) {
     setTrends([]);
-    let response = await fetch('/api/trends', {
+    let response = await fetch('/api/getTrending', {
       method: 'POST',
       body: JSON.stringify({ network: network })
     });

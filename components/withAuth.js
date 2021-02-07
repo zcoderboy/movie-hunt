@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import supabase from '../lib/supabaseClient';
-import Router from 'next/router';
-
 const withAuth = (Component) => (props) => {
   const [render, setRender] = useState(false);
-  useEffect(() => {
-    if (!supabase.auth.session()) {
-      Router.replace('/');
-    } else {
-      setRender(true);
+  async function getUser() {
+    const response = await fetch('/api/getUser');
+    if (response.ok) {
+      return await response.json();
     }
+  }
+  useEffect(() => {
+    getUser().then((data) => {
+      if (data) {
+        setRender(true);
+      } else {
+        window.location.href = '/';
+      }
+    });
   }, []);
   return render && <Component {...props} />;
 };

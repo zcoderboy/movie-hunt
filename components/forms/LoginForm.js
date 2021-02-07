@@ -16,6 +16,7 @@ const LoginForm = () => {
         window.location.href = '/';
       })
       .catch((error) => {
+        console.log(error);
         setIsLoading(false);
         alert("Couldn't find an account with the provided credentials.");
       });

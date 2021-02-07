@@ -25,7 +25,6 @@ import { FaCog } from 'react-icons/fa';
 import { MdMovie } from 'react-icons/md';
 import { HiUser } from 'react-icons/hi';
 import { FiPower } from 'react-icons/fi';
-import supabase from '../../lib/supabaseClient';
 import { BiLogIn } from 'react-icons/bi';
 import { UserContext } from '../../context/UserContext';
 import { useContext } from 'react';
@@ -37,6 +36,7 @@ import { useState } from 'react';
 import LoginForm from '../forms/LoginForm';
 import RegisterForm from '../forms/RegisterForm';
 import { HiMenuAlt3 } from 'react-icons/hi';
+import useUser from '../../utils/useUser';
 
 const CMenu = chakra(Menu);
 
@@ -44,8 +44,8 @@ const Header = () => {
   const { logoutUser } = useContext(UserContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentModal, setCurrentModal] = useState({});
+  const user = useUser();
   const router = useRouter();
-  const user = supabase.auth.user();
 
   const menuDisplay = bp({ base: 'none', lg: 'flex' });
   const menuHamburger = bp({ base: 'block', lg: 'none' });
@@ -63,7 +63,7 @@ const Header = () => {
   };
   return (
     <Flex boxShadow="0 .5rem 1rem rgba(0,0,0,.15)" alignItems="center">
-      {supabase.auth.session() && (
+      {user && (
         <Container maxW={maxW} py="5">
           <Flex justifyContent="space-between" align="center">
             <HStack spacing="1rem" alignItems="center">
@@ -85,11 +85,11 @@ const Header = () => {
                 }}>
                 Update my preferences
               </Button>
-              <Link href="/account/discover">
+              <a href="/account/discover">
                 <Button colorScheme="primary" variant="outline">
                   Discover shows
                 </Button>
-              </Link>
+              </a>
               <Box as={FiPower} boxSize="25px" onClick={handleLogout} cursor="pointer" />
             </HStack>
             <Box pos="relative" zIndex="1000" d={menuHamburger}>
@@ -125,7 +125,7 @@ const Header = () => {
           </Flex>
         </Container>
       )}
-      {!supabase.auth.session() && router.pathname !== '/' && (
+      {!user && router.pathname !== '/' && (
         <Container maxW={maxW} py="5">
           <Flex justifyContent="space-between" align="center">
             <HStack spacing="1rem" alignItems="center">

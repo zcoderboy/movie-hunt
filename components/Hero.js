@@ -12,13 +12,20 @@ import {
 } from '@chakra-ui/react';
 import RegisterForm from './forms/RegisterForm';
 import Modal from './Modal';
-import { useState, useEffect } from 'react';
-import supabase from '../lib/supabaseClient';
+import { useState, useEffect, useContext } from 'react';
 import LoginForm from './forms/LoginForm';
+import useUser from '../utils/useUser';
 
 const Hero = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const user = useUser();
   const [modalState, setModalState] = useState(1);
+
+  // Responsive breakpoints
+  const heroHeight = bp({ base: '30vh', lg: '50vh' });
+  const container = bp({ base: '96vw', lg: '90vw' });
+  const heroText = bp({ base: 'md1', lg: 'lg' });
+  const btnText = bp({ base: '18px', lg: '20px' });
 
   const openModal = (modal) => {
     setModalState(modal);
@@ -32,7 +39,7 @@ const Hero = () => {
       w="100vw"
       flexDir="column"
       backgroundImage={`url(/images/hero.jpg)`}
-      h={bp({ base: '30vh', lg: '50vh' })}
+      h={heroHeight}
       backgroundSize="100vw"
       backgroundPosition="center"
       backgroundRepeat="no-repeat"
@@ -43,20 +50,20 @@ const Hero = () => {
         flexDir="column"
         h="100%"
         justifyContent="center"
-        maxW={bp({ base: '96vw', lg: '90vw' })}
+        maxW={container}
         color="white"
         zIndex="100"
         pos="relative">
         <Box>
-          <Text fontWeight="bold" fontSize={bp({ base: 'md1', lg: 'lg' })} lineHeight="1.2">
+          <Text fontWeight="bold" fontSize={heroText} lineHeight="1.2">
             What if you stop searching
             <br /> and start watching ?
           </Text>
-          <Button mt="5" colorScheme="primary">
+          <Button mt="5" colorScheme="primary" onClick={() => openModal(2)}>
             Set my preferences
           </Button>
         </Box>
-        {!supabase.auth.session() && (
+        {!user && (
           <HStack spacing="1.5rem" pos="absolute" right="0" top="20px">
             <Link
               href="#"
@@ -64,7 +71,7 @@ const Hero = () => {
               textDecor="underline"
               color="white"
               fontWeight="bold"
-              fontSize={bp({ base: '18px', lg: '20px' })}>
+              fontSize={btnText}>
               Register
             </Link>
             <Link
@@ -73,7 +80,7 @@ const Hero = () => {
               textDecor="underline"
               color="white"
               fontWeight="bold"
-              fontSize={bp({ base: '18px', lg: '20px' })}>
+              fontSize={btnText}>
               Login
             </Link>
           </HStack>

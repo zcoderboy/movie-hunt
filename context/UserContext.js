@@ -1,5 +1,4 @@
 import React from 'react';
-import supabase from '../lib/supabaseClient';
 import { useReducer } from 'react';
 
 const LOGIN_TYPE = 'SIGN_IN';
@@ -25,38 +24,27 @@ const userReducer = (state, action) => {
 export const UserProvider = ({ children }) => {
   const [user, dispatch] = useReducer(userReducer, {
     authLoaded: false,
-    user: null,
-    accessToken: ''
+    user: null
   });
 
   const loginUser = (user) => {
-    let { email, password } = user;
     return new Promise(async (resolve, reject) => {
-      try {
-        const response = await supabase.auth.signIn({ email: email, password: password });
-        const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-          if (event === 'PASSWORD_RECOVERY') setAuthView('update_password');
-          if (event === 'USER_UPDATED') setTimeout(() => setAuthView('sign_in'), 1000);
-          // Send session to /api/auth route to set the auth cookie.
-          // NOTE: this is only needed if you're doing SSR (getServerSideProps)!
-          fetch('/api/auth', {
-            method: 'POST',
-            headers: new Headers({ 'Content-Type': 'application/json' }),
-            credentials: 'same-origin',
-            body: JSON.stringify({ event, session })
-          }).then((res) => res.json());
-        });
+      let response = await fetch('/api/auth/login', {
+        method: 'POST',
+        body: JSON.stringify(user)
+      });
+      if (response.ok) {
+        let user = await response.json();
         dispatch({
           type: LOGIN_TYPE,
           payload: {
-            user: response.user,
-            accessToken: response.data.access_token,
+            user: user,
             authLoaded: true
           }
         });
         resolve(response);
-      } catch (error) {
-        reject(error);
+      } else {
+        reject('Failed to login user');
       }
     });
   };
@@ -64,12 +52,14 @@ export const UserProvider = ({ children }) => {
   const logoutUser = () => {
     return new Promise(async (resolve, reject) => {
       try {
-        await supabase.auth.signOut();
-        dispatch({
-          type: LOGOUT_TYPE,
-          payload: {}
-        });
-        resolve(true);
+        let response = await fetch('/api/auth/logout');
+        if (response.ok) {
+          dispatch({
+            type: LOGOUT_TYPE,
+            payload: {}
+          });
+          resolve(true);
+        }
       } catch (error) {
         reject(error);
       }
@@ -77,19 +67,25 @@ export const UserProvider = ({ children }) => {
   };
 
   async function registerUser(user) {
-    let { email, password } = user;
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await supabase.auth.signUp({ email: email, password: password });
-        dispatch({
-          type: LOGIN_TYPE,
-          payload: {
-            user: response.user,
-            accessToken: response.data.access_token,
-            authLoaded: true
-          }
+        let response = await fetch('/api/auth/register', {
+          method: 'POST',
+          body: JSON.stringify(user)
         });
-        resolve(response);
+        if (response.ok) {
+          let user = await response.json();
+          dispatch({
+            type: LOGIN_TYPE,
+            payload: {
+              user: user,
+              authLoaded: true
+            }
+          });
+          resolve(response);
+        } else {
+          reject('Failed to register user');
+        }
       } catch (error) {
         reject(error);
       }
