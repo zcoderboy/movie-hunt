@@ -7,8 +7,12 @@ import Header from '../components/layout/Header';
 import { DefaultSeo } from 'next-seo';
 import SEO from '../next-seo.config';
 import Head from 'next/head';
-
+import { useState, useEffect } from 'react';
 function MyApp({ Component, pageProps }) {
+  const [render, setRender] = useState(false);
+  useEffect(() => {
+    setRender(true);
+  }, []);
   return (
     <UserProvider>
       <Head>
@@ -21,8 +25,12 @@ function MyApp({ Component, pageProps }) {
       <DefaultSeo {...SEO} />
       <SearchProvider>
         <ChakraProvider theme={theme} resetCSS={true}>
-          <Header />
-          <Component {...pageProps} />
+          {render && (
+            <>
+              <Header />
+              <Component {...pageProps} />
+            </>
+          )}
         </ChakraProvider>
       </SearchProvider>
     </UserProvider>
