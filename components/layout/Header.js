@@ -63,7 +63,7 @@ const Header = () => {
   };
   return (
     <Flex boxShadow="0 .5rem 1rem rgba(0,0,0,.15)" alignItems="center">
-      {user && (
+      {Object.keys(user).length && (
         <Container maxW={maxW} py="5">
           <Flex justifyContent="space-between" align="center">
             <HStack spacing="1rem" alignItems="center">
