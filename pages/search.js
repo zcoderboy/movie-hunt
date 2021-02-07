@@ -50,9 +50,10 @@ const Search = () => {
             </Text>
           </HStack>
           <SimpleGrid columns={columns} spacing={spacing} mt="7">
-            {result.map((media) => {
+            {result.map((media, index) => {
               return (
                 <MovieCard
+                  key={index}
                   poster={media.data.poster_path}
                   title={media.data.title}
                   description={media.data.overview}

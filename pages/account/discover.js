@@ -147,9 +147,9 @@ const Discover = ({ movies }) => {
         </HStack>
       )}
       <HStack spacing="1rem" mt="1rem" h="30px" flexWrap="wrap">
-        {preferences.genres.map((genre) => {
+        {preferences.genres.map((genre, index) => {
           return (
-            <Badge variant="outline" colorScheme="primary" p=".3rem" mb="1rem">
+            <Badge key={index} variant="outline" colorScheme="primary" p=".3rem" mb="1rem">
               {genre.name}
             </Badge>
           );
@@ -157,9 +157,10 @@ const Discover = ({ movies }) => {
       </HStack>
       <SimpleGrid columns={bp({ base: 2, lg: 4 })} spacing="40px" mt="7">
         {medias.length !== 0 &&
-          medias.map((media) => {
+          medias.map((media, index) => {
             return (
               <MovieCard
+                key={index}
                 poster={media.data.poster_path}
                 title={media.data.title}
                 description={media.data.overview}
@@ -170,8 +171,8 @@ const Discover = ({ movies }) => {
           })}
         {medias.length === 0 &&
           !isEmpty &&
-          [...new Array(4)].map(() => {
-            return <Skeleton h="350px" borderRadius="4px"></Skeleton>;
+          [...new Array(4)].map((_, index) => {
+            return <Skeleton key={index} h="350px" borderRadius="4px"></Skeleton>;
           })}
       </SimpleGrid>
       {isEmpty && (

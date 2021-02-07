@@ -88,9 +88,10 @@ const TrendingMovies = ({ trending }) => {
         spacing={bp({ base: '20px', lg: '40px' })}
         mt="7">
         {trends.length !== 0 &&
-          trends.map((media) => {
+          trends.map((media, index) => {
             return (
               <MovieCard
+                key={index}
                 poster={media.data.poster_path}
                 title={media.data.title ? media.data.title : media.data.name}
                 description={media.data.overview}
@@ -102,8 +103,8 @@ const TrendingMovies = ({ trending }) => {
             );
           })}
         {trends.length === 0 &&
-          [...new Array(4)].map(() => {
-            return <Skeleton h="350px" borderRadius="4px"></Skeleton>;
+          [...new Array(4)].map((_, index) => {
+            return <Skeleton key={index} h="350px" borderRadius="4px"></Skeleton>;
           })}
       </SimpleGrid>
     </Container>

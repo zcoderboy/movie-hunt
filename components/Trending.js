@@ -23,7 +23,7 @@ const Trending = ({ data }) => {
 
   async function loadTrendingByNetwork(network) {
     setIsLoading(true);
-    let response = await fetch('/api/trends', {
+    let response = await fetch('/api/getTrending', {
       method: 'POST',
       body: JSON.stringify({ network: network })
     });
@@ -78,9 +78,10 @@ const Trending = ({ data }) => {
         </HStack>
         <SimpleGrid columns={bp({ base: 2, lg: 4 })} spacing="40px" mt="5">
           {!isLoading &&
-            trending.map((media) => {
+            trending.map((media, index) => {
               return (
                 <MovieCard
+                  key={index}
                   poster={media.data.poster_path}
                   title={media.data.title ? media.data.title : media.data.name}
                   description={media.data.overview}

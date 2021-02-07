@@ -137,9 +137,9 @@ const MovieCard = ({ poster, description, releaseDate, title, extra }) => {
                 Genres
               </Text>
               <HStack>
-                {extra.data.genres.map((genre) => {
+                {extra.data.genres.map((genre, index) => {
                   return (
-                    <Badge variant="outline" colorScheme="primary" p=".3rem">
+                    <Badge key={index} variant="outline" colorScheme="primary" p=".3rem">
                       {genre.name}
                     </Badge>
                   );
