@@ -52,6 +52,7 @@ export const UserProvider = ({ children }) => {
   const logoutUser = () => {
     return new Promise(async (resolve, reject) => {
       try {
+        document.cookie = '_supabase=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/api;';
         let response = await fetch('/api/auth/logout');
         if (response.ok) {
           dispatch({
