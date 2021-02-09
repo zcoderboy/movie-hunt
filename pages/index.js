@@ -69,7 +69,7 @@ export default function Home({ trending }) {
   );
 }
 
-export async function getServerSideProps(context) {
+export async function getStaticProps(context) {
   const supabase = require('@supabase/supabase-js');
   const client = supabase.createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
   let { data: trending, error } = await client.from('trending').select('*').range(0, 3);

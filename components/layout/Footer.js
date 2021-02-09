@@ -6,7 +6,7 @@ const Footer = () => {
     <VStack alignItems="center" justifyContent="center" h="100px" my="8">
       <Text textAlign="center" mb="3">
         Made with ❤️ by{' '}
-        <Link textDecor="underline" to="https://twitter.com/zcoderboy" target="blank">
+        <Link textDecor="underline" href="https://twitter.com/zcoderboy" target="blank">
           @zcoderboy
         </Link>
         <br />
