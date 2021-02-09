@@ -46,7 +46,7 @@ const Discover = ({ movies }) => {
     let match = false;
     const { rateMin, yearMin } = preferences;
     media.data.genres.forEach((genre, index) => {
-      preferences.genres.forEach((item) => {
+      preferences.genres?.forEach((item) => {
         if (
           genre.id == item.id &&
           (media.provider === preferences.network || preferences.network === 'ANY')
@@ -147,7 +147,7 @@ const Discover = ({ movies }) => {
         </HStack>
       )}
       <HStack spacing="1rem" mt="1rem" h="30px" flexWrap="wrap">
-        {preferences.genres.map((genre, index) => {
+        {preferences.genres?.map((genre, index) => {
           return (
             <Badge key={index} variant="outline" colorScheme="primary" p=".3rem" mb="1rem">
               {genre.name}
