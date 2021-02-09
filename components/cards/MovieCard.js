@@ -82,7 +82,7 @@ const MovieCard = ({ poster, description, releaseDate, title, extra }) => {
           zIndex="0">
           <VStack spacing=".5rem" align="left">
             <Text fontWeight="bold">{title}</Text>
-            <Text>{releaseDate.split('-')[0]}</Text>
+            <Text>{releaseDate ? releaseDate.split('-')[0] : '---'}</Text>
             <Text fontSize="14px">{description.substr(0, 100) + '...'}</Text>
           </VStack>
         </Box>
@@ -165,7 +165,7 @@ const MovieCard = ({ poster, description, releaseDate, title, extra }) => {
               <Text mb="2" fontSize="md1" fontWeight="bold">
                 Year
               </Text>
-              <Text>{releaseDate.split('-')[0]}</Text>
+              <Text>{releaseDate ? releaseDate.split('-')[0] : '---'}</Text>
             </Box>
           </VStack>
         </HStack>

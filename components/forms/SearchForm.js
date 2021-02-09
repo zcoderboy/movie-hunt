@@ -4,6 +4,8 @@ import {
   Input,
   chakra,
   Button,
+  FormControl,
+  FormLabel,
   Box,
   Heading,
   useBreakpointValue as bp
@@ -110,42 +112,51 @@ const SearchForm = () => {
       </Heading>
       <form onSubmit={formik.handleSubmit}>
         <HStack mt="4" flexDir={bp({ base: 'column', lg: 'row' })}>
-          <RSelect
-            onChange={(option) => setSelected(option)}
-            styles={customStyles}
-            placeholder="Genre"
-            name="genre"
-            mb={bp({ base: '1.5rem', lg: '0rem' })}
-            options={genres}
-          />
-          <Input
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.year}
-            inputMode="numeric"
-            flex="1"
-            ml={bp({ base: '0 !important', lg: 'auto' })}
-            mb={bp({ base: '1.5rem', lg: '0rem' })}
-            name="year"
-            focusBorderColor="#F97B2F"
-            placeholder="Min. Year"
-            h="3rem"
-          />
-          <CSelect
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.network}
-            flex="1"
-            mb={bp({ base: '1.5rem', lg: '0rem' })}
-            ml={bp({ base: '0 !important', lg: 'auto' })}
-            name="network"
-            focusBorderColor="#F97B2F"
-            placeholder="Streaming service"
-            h="3rem">
-            <option value="NETFLIX">Netflix</option>
-            <option value="AMAZON PRIME VIDEO">Amazon Prime Video</option>
-            <option value="ANY">Any</option>
-          </CSelect>
+          <FormControl>
+            <FormLabel d="none">Genre</FormLabel>
+            <RSelect
+              onChange={(option) => setSelected(option)}
+              styles={customStyles}
+              placeholder="Genre"
+              name="genre"
+              mb={bp({ base: '1.5rem', lg: '0rem' })}
+              options={genres}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel d="none">Min. Year</FormLabel>
+            <Input
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.year}
+              inputMode="numeric"
+              flex="1"
+              ml={bp({ base: '0 !important', lg: 'auto' })}
+              mb={bp({ base: '1.5rem', lg: '0rem' })}
+              name="year"
+              focusBorderColor="#F97B2F"
+              placeholder="Min. Year"
+              h="3rem"
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel d="none">network</FormLabel>
+            <CSelect
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.network}
+              flex="1"
+              mb={bp({ base: '1.5rem', lg: '0rem' })}
+              ml={bp({ base: '0 !important', lg: 'auto' })}
+              name="network"
+              focusBorderColor="#F97B2F"
+              placeholder="Streaming service"
+              h="3rem">
+              <option value="NETFLIX">Netflix</option>
+              <option value="AMAZON PRIME VIDEO">Amazon Prime Video</option>
+              <option value="ANY">Any</option>
+            </CSelect>
+          </FormControl>
           <Button
             isLoading={isLoading}
             loadingText="Searching..."

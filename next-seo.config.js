@@ -1,4 +1,5 @@
 export default {
+  description: 'Discover movies and TV Shows to enjoy. Made by @zcoderboy',
   openGraph: {
     type: 'website',
     locale: 'en_IE',
